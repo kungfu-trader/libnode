@@ -1,0 +1,36 @@
+{
+  "name": "@kungfu-trader/libnode",
+  "author": {
+    "name": "kungfu-trader",
+    "email": "info@kungfu.link"
+  },
+  "version": "0.0.1",
+  "description": "Build shared node lib",
+  "license": "Apache-2.0",
+  "main": ".gyp/node-lib.js",
+  "repository": {
+    "url": "https://github.com/kungfu-trader/libnode.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "binary": {
+    "module_name": "libnode",
+    "module_path": "dist/node",
+    "remote_path": "libnode/v{major}/v{version}",
+    "package_name": "libnode-v{version}-{platform}-{arch}-{configuration}.tar.gz",
+    "host": "https://prebuilt.libkungfu.cc"
+  },
+  "scripts": {
+    "build": "node .gyp/node-pre-gyp.js build",
+    "make": "node .gyp/node-make.js"
+  },
+  "devDependencies": {
+    "@mapbox/node-pre-gyp": "^1.0.5",
+    "fs-extra": "^9.1.0",
+    "git-client": "^1.8.3",
+    "glob": "^7.1.6",
+    "yargs": "^17.1.0",
+    "yarn": "^1.22.0"
+  }
+}

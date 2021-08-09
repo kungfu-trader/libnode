@@ -102,3 +102,17 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Python related
+.pdm.toml
+__pycache__/
+__pypackages__/
+*.pyc
+*.egg-info/
+*.egg
+
+# Build related
+build/
+build-*/
+cmake-build-debug/
+dist/
