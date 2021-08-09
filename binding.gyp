@@ -21,7 +21,8 @@
             "<(module_root_dir)/node/node.gyp"
           ],
           "action": [
-            "git",
+            "python",
+            ".gyp/gyp_action_git.py",
             "submodule",
             "update",
             "--init"
