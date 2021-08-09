@@ -1,4 +1,5 @@
 const { run } = require('./node-lib.js');
+const fs = require('fs');
 const fse = require('fs-extra');
 const glob = require('glob');
 const path = require('path');
@@ -22,3 +23,12 @@ glob.sync(path.join("node", "out", "Release", "libnode*")).forEach((p) => {
     console.log(path.basename(p));
     fse.copySync(p, path.join(distDir, path.basename(p)));
 });
+
+const moduleTarget = path.join(distDir, "libnode.node");
+const time = new Date();
+
+try {
+    fs.utimesSync(moduleTarget, time, time);
+} catch (err) {
+    fs.closeSync(fs.openSync(moduleTarget, 'w'));
+}
