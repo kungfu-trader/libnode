@@ -1,5 +1,5 @@
 const { run } = require('./node-lib.js');
-const fs = require('fs');
+const fse = require('fs-extra');
 const glob = require('glob');
 const path = require('path');
 const os = require('os');
@@ -14,3 +14,11 @@ else {
     run("make", ["-j", `${os.cpus().length}`], "node");
 }
 
+const distDir = path.join("dist", "node");
+fse.ensureDirSync(distDir);
+
+glob.sync(path.join("node", "out", "Release", "libnode*")).forEach((p) => {
+    console.log(p);
+    console.log(path.basename(p));
+    fse.copySync(p, path.join(distDir, path.basename(p)));
+});
