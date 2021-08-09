@@ -37,7 +37,7 @@ jobs:
           python-version: "3.7"
 
       - name: Setup Windows environment
-        if: ${{ matrix.name == "Windows" }}
+        if: ${{ matrix.name == 'Windows' }}
         uses: crazy-max/ghaction-chocolatey@v1
         with:
           args: install nasm
