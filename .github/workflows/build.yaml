@@ -36,20 +36,19 @@ jobs:
         with:
           python-version: "3.7"
 
-      - name: Bump Version
-        uses: kungfu-trader/action-bump-version@v3
+      - name: Setup Windows environment
+        if: ${{ matrix.name == "Windows" }}
+        uses: crazy-max/ghaction-chocolatey@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          action: "prebuild"
+          args: install nasm
 
-      - name: Setup Kungfu environment
+      - name: Setup Yarn environment
         run: |
-          pip3 install pipenv==2021.5.29
           yarn install
         env:
           KF_SKIP_FALLBACK_BUILD: true
 
-      - name: Build Kungfu
+      - name: Build libnode
         run: yarn build
 
       - name: Package Prebuilt
@@ -60,7 +59,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#github-context
-          name: "Kungfu-Prebuilt-${{matrix.name}}-${{github.actor}}-${{github.sha}}"
+          name: "Libnode-${{matrix.name}}-${{github.actor}}-${{github.sha}}"
           path: |
             **/build/stage/*/v*/v*/*.*
             !**/build/stage/**/.*
