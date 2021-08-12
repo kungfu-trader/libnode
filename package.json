@@ -15,7 +15,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "binary": {
-    "module_name": "libnode",
+    "module_name": "link_node",
     "module_path": "dist/node",
     "remote_path": "libnode/v{major}/v{version}",
     "package_name": "libnode-v{version}-{platform}-{arch}-{configuration}.tar.gz",
@@ -24,14 +24,25 @@
   "scripts": {
     "install": "node .gyp/node-pre-gyp.js install",
     "build": "node .gyp/node-pre-gyp.js build",
-    "make": "node .gyp/node-make.js"
+    "clean": "node .gyp/node-pre-gyp.js clean",
+    "dist": "node .gyp/node-dist.js",
+    "make": "node .gyp/node-make.js",
+    "package": "node .gyp/node-pre-gyp.js package",
+    "rebuild": "node .gyp/node-pre-gyp.js rebuild",
+    "format": "prettier --write --parser typescript .gyp/*.js"
   },
-  "devDependencies": {
+  "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.5",
     "fs-extra": "^9.1.0",
-    "git-client": "^1.8.3",
     "glob": "^7.1.6",
+    "node-addon-api": "^2.0.0",
+    "node-gyp": "^7.1.0",
     "yargs": "^17.1.0",
-    "yarn": "^1.22.0"
+    "sywac": "^1.3.0",
+    "yarn": "^1.22.0",
+    "xml-js": "^1.6.11"
+  },
+  "devDependencies": {
+    "prettier": "^2.3.0"
   }
 }

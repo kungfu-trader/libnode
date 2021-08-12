@@ -1,11 +1,17 @@
 {
   "variables": {
     "git_inputs": [
-      "<(module_root_dir)/.gitmodules"
+      "<(module_root_dir)/.gitmodules",
+    ],
+    "libnode_inputs": [
+      "<!@(node -p \"require('glob').sync('node/**/*.*(h|cc|S)', {ignore:'node/out/**'}).join(' ');\")",
     ],
     "module_inputs": [
-      "<(module_root_dir)/node/node.gyp"
-    ]
+      "<!@(node -p \"require('glob').sync('src/**/*.*(h|cc)').join(' ');\")",
+    ],
+    "gyp_inputs": [
+      "<!@(node -p \"require('glob').sync('.gyp/**/*.*(js|py)').join(' ');\")",
+    ],
   },
   "targets": [
     {
@@ -15,10 +21,10 @@
         {
           "action_name": "gitmodules",
           "inputs": [
-            "<@(git_inputs)"
+            "<@(git_inputs)",
           ],
           "outputs": [
-            "<(module_root_dir)/node/node.gyp"
+            "<(module_root_dir)/node/node.gyp",
           ],
           "action": [
             "python",
@@ -31,21 +37,67 @@
       ]
     },
     {
-      "target_name": "<(module_name)",
+      "target_name": "libnode",
       "type": "none",
+      "dependencies": [
+        "git"
+      ],
       "actions": [
         {
-          "action_name": "build",
+          "action_name": "libnode",
           "inputs": [
-            "<@(module_inputs)"
+            "<@(libnode_inputs)",
           ],
           "outputs": [
-            "<(PRODUCT_DIR)/<(module_name)"
+            "<(PRODUCT_DIR)/libnode.json",
           ],
           "action": [
             "python",
             ".gyp/gyp_action_yarn.py",
-            "make"
+            "make",
+            "--product-dir",
+            "<(PRODUCT_DIR)",
+          ]
+        }
+      ]
+    },
+    {
+      "target_name": "<(module_name)",
+      "dependencies": [
+        "libnode",
+      ],
+      "sources": [
+        "<@(module_inputs)",
+      ],
+      "include_dirs": [
+        "<!@(node -p \"require('node-addon-api').include\")",
+      ],
+      'defines': [ 'NAPI_DISABLE_CPP_EXCEPTIONS' ],
+    },
+    {
+      "target_name": "dist",
+      "type": "none",
+      "dependencies": [
+        "libnode",
+        "<(module_name)",
+      ],
+      "actions": [
+        {
+          "action_name": "dist",
+          "inputs": [
+            "<@(libnode_inputs)",
+            "<@(module_inputs)",
+            "<@(gyp_inputs)",
+          ],
+          "outputs": [
+            "<(module_root_dir)/dist/node/libnode.json",
+          ],
+          "action": [
+            "python",
+            ".gyp/gyp_action_yarn.py",
+            "dist",
+            "--product-dir",
+            "<(PRODUCT_DIR)",
           ]
         }
       ]

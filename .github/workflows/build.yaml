@@ -48,8 +48,17 @@ jobs:
         env:
           KF_SKIP_FALLBACK_BUILD: true
 
-      - name: Build libnode
+      - name: Build libnode (Unix)
+        if: ${{ matrix.name != 'Windows' }}
         run: yarn build
+
+      - name: Build libnode (Windows)
+        if: ${{ matrix.name == 'Windows' }}
+        run: |
+          cd node
+          dir
+          .\vcbuild.bat dll x64 projgen
+          .\vcbuild.bat dll x64 noprojgen
 
       - name: Package Prebuilt
         run: |
