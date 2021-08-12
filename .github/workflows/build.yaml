@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - v*.x
 
 jobs:
   build:
@@ -34,7 +35,7 @@ jobs:
       - name: Setup Python environment
         uses: actions/setup-python@v2
         with:
-          python-version: "3.7"
+          python-version: "3.9"
 
       - name: Setup Windows environment
         if: ${{ matrix.name == 'Windows' }}
@@ -48,32 +49,19 @@ jobs:
         env:
           KF_SKIP_FALLBACK_BUILD: true
 
-      - name: Build libnode (Unix)
-        if: ${{ matrix.name != 'Windows' }}
+      - name: Build
         run: yarn build
 
-      - name: Build libnode (Windows)
-        if: ${{ matrix.name == 'Windows' }}
-        run: |
-          cd node
-          dir
-          .\vcbuild.bat dll x64 projgen
-          .\vcbuild.bat dll x64 noprojgen
+      - name: Package
+        run: yarn package
 
-      - name: Package Prebuilt
-        run: |
-          yarn package
-
-      - name: Upload Prebuilt
+      - name: Upload
         uses: actions/upload-artifact@v2
         with:
           # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#github-context
-          name: "Libnode-${{matrix.name}}-${{github.actor}}-${{github.sha}}"
+          name: "libnode-${{matrix.name}}-${{github.actor}}-${{github.sha}}"
           path: |
             **/build/stage/*/v*/v*/*.*
-            !**/build/stage/**/.*
-            !**/build/stage/**/*.yml
-            !**/build/stage/**/*.yaml
           if-no-files-found: ignore
 
   release:
