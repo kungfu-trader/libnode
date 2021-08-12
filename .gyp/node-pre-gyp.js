@@ -13,7 +13,7 @@ exports.argv = require('yargs/yargs')(process.argv.slice(2))
     (description = 'install through node-pre-gyp'),
     (builder = () => {}),
     (handler = () => {
-      const skipBuild = 'KF_SKIP_FALLBACK_BUILD' in process.env;
+      const skipBuild = process.env.KF_SKIP_FALLBACK_BUILD;
       node_pre_gyp(skipBuild ? ['install'] : ['install', '--fallback-to-build'], !skipBuild);
     }),
   )
@@ -24,11 +24,11 @@ exports.argv = require('yargs/yargs')(process.argv.slice(2))
     (handler = () => {
       node_pre_gyp(['configure', 'build']);
     }),
-)
+  )
   .command(
     (command = 'clean'),
     (description = 'clean'),
-    (builder = () => { }),
+    (builder = () => {}),
     (handler = () => {
       node_pre_gyp(['clean']);
     }),

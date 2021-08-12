@@ -19,8 +19,8 @@ const dist = (productDir) => {
 
 const cli = sywac
   .path('--product-dir', { defaultValue: 'Release' })
-  .help('-h, --help')
-  .version('-v, --version')
+  .help('--help')
+  .version('--version')
   .outputSettings({ maxWidth: 75 });
 
 module.exports = cli;

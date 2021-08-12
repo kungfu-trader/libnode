@@ -1,4 +1,4 @@
-const { cleanEnv, run } = require('./node-lib.js');
+const { patchEnv, run } = require('./node-lib.js');
 const fs = require('fs');
 const fse = require('fs-extra');
 const glob = require('glob');
@@ -62,8 +62,8 @@ const runWinPatch = () => {
 };
 
 const buildWin = () => {
-  cleanEnv();
-  run(path.join('.', 'vcbuild.bat'), [arch, 'dll', 'release', 'projgen', 'nobuild'], { cwd: nodeSrcDir });
+  patchEnv();
+  run(path.join('.', 'vcbuild.bat'), ['dll', arch, 'release', 'projgen', 'nobuild'], { cwd: nodeSrcDir });
   runWinPatch();
   run(path.join('.', 'vcbuild.bat'), ['dll', 'noprojgen'], { cwd: nodeSrcDir });
 };
@@ -94,8 +94,8 @@ const stamp = (baseDir) => {
 
 const cli = sywac
   .path('--product-dir', { defaultValue: 'Release' })
-  .help('-h, --help')
-  .version('-v, --version')
+  .help('--help')
+  .version('--version')
   .outputSettings({ maxWidth: 75 });
 
 module.exports = cli;
@@ -106,4 +106,4 @@ async function main() {
   stamp(path.join('build', argv['product-dir']));
 }
 
-if (require.main === module) main();
+if (require.main === module && !process.env.KF_SKIP_MAKE_LIBNODE) main();

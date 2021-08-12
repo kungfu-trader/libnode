@@ -1,5 +1,6 @@
 {
   "variables": {
+    "gyp_dir": "<(module_root_dir)/.gyp",
     "git_inputs": [
       "<(module_root_dir)/.gitmodules",
     ],
@@ -28,7 +29,7 @@
           ],
           "action": [
             "python",
-            ".gyp/gyp_action_git.py",
+            "<(gyp_dir)/gyp_action_git.py",
             "submodule",
             "update",
             "--init"
@@ -53,10 +54,8 @@
           ],
           "action": [
             "python",
-            ".gyp/gyp_action_yarn.py",
+            "<(gyp_dir)/gyp_action_yarn.py",
             "make",
-            "--product-dir",
-            "<(PRODUCT_DIR)",
           ]
         }
       ]
@@ -94,10 +93,8 @@
           ],
           "action": [
             "python",
-            ".gyp/gyp_action_yarn.py",
+            "<(gyp_dir)/gyp_action_yarn.py",
             "dist",
-            "--product-dir",
-            "<(PRODUCT_DIR)",
           ]
         }
       ]

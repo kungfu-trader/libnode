@@ -28,7 +28,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2
         with:
-          node-version: "12"
+          node-version: "14"
           registry-url: "https://npm.pkg.github.com"
           scope: "@kungfu-trader"
 
@@ -41,19 +41,28 @@ jobs:
         if: ${{ matrix.name == 'Windows' }}
         uses: crazy-max/ghaction-chocolatey@v1
         with:
-          args: install nasm
+          args: install -y nasm --no-progress
 
-      - name: Setup Yarn environment
+      - name: Setup Windows PATH for nasm
+        if: ${{ matrix.name == 'Windows' }}
         run: |
-          yarn install
+          Get-ChildItem -Path "${env:ProgramFiles}" | Where-Object {($_.Name -Like 'NASM*')} | % { $_.FullName } | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
+ 
+      - name: Setup Yarn environment
+        run: yarn install
         env:
           KF_SKIP_FALLBACK_BUILD: true
 
-      - name: Build
-        run: yarn build
+      - name: Make libnode
+        # Workaround for gyp not able to find nasm.exe when run on GitHub Windows runner
+        run: yarn make
 
-      - name: Package
-        run: yarn package
+      - name: Build and Package
+        run: |
+          yarn build
+          yarn package
+        env:
+          KF_SKIP_MAKE_LIBNODE: true
 
       - name: Upload
         uses: actions/upload-artifact@v2
@@ -105,3 +114,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts-path: "github-artifacts"
           bucket-staging: "kungfu-prebuilt"
+          no-comment: "true"

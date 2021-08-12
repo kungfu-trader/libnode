@@ -2,7 +2,7 @@ const { spawnSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-exports.cleanEnv = function () {
+exports.patchEnv = function () {
   Object.keys(process.env).forEach((key) => {
     if (key.startsWith('NPM_') || key.startsWith('npm_')) {
       delete process.env[key];
