@@ -1,8 +1,8 @@
-name: Build and Release
+name: Release - Verify
 on:
-  push:
+  pull_request:
+    types: [opened, reopened, synchronize]
     branches:
-      - main
       - v*.x
 
 jobs:
@@ -99,15 +99,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts-path: "github-artifacts"
           bucket-staging: "kungfu-prebuilt-staging"
-          no-comment: "true"
-
-      - name: Publish Prebuilt to AWS (US)
-        uses: kungfu-trader/action-publish-prebuilt@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          bucket-staging: 'kungfu-prebuilt-staging'
-          bucket-release: 'kungfu-prebuilt'
-          no-comment: "true"
 
       - name: Configure AWS Crendentials (CN)
         uses: aws-actions/configure-aws-credentials@v1
@@ -122,15 +113,3 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts-path: "github-artifacts"
           bucket-staging: "kungfu-prebuilt-staging"
-          no-comment: "true"
-
-      - name: Publish Prebuilt to AWS (CN)
-        uses: kungfu-trader/action-publish-prebuilt@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          bucket-staging: 'kungfu-prebuilt-staging'
-          bucket-release: 'kungfu-prebuilt'
-          no-comment: "true"
-
-      - name: Publish to GitHub Packages
-        run: npm publish

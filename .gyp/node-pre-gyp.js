@@ -14,7 +14,7 @@ exports.argv = require('yargs/yargs')(process.argv.slice(2))
     (builder = () => {}),
     (handler = () => {
       const skipBuild = process.env.KF_SKIP_FALLBACK_BUILD;
-      node_pre_gyp(skipBuild ? ['install'] : ['install', '--fallback-to-build'], !skipBuild);
+      node_pre_gyp(['install'], !skipBuild);
     }),
   )
   .command(
