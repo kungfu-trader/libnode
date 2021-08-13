@@ -131,3 +131,6 @@ jobs:
           bucket-staging: 'kungfu-prebuilt-staging'
           bucket-release: 'kungfu-prebuilt'
           no-comment: "true"
+
+      - name: Publish to GitHub Packages
+        run: npm publish
