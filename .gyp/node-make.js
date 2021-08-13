@@ -1,7 +1,5 @@
 const { patchEnv, run } = require('./node-lib.js');
 const fs = require('fs');
-const fse = require('fs-extra');
-const glob = require('glob');
 const path = require('path');
 const os = require('os');
 const sywac = require('sywac');
@@ -93,7 +91,7 @@ const stamp = (baseDir) => {
 };
 
 const cli = sywac
-  .path('--product-dir', { defaultValue: 'Release' })
+  .path('--build-type', { defaultValue: 'Release' })
   .help('--help')
   .version('--version')
   .outputSettings({ maxWidth: 75 });
@@ -103,7 +101,7 @@ module.exports = cli;
 async function main() {
   const argv = await cli.parseAndExit();
   build();
-  stamp(path.join('build', argv['product-dir']));
+  stamp(path.join('build', argv['build-type']));
 }
 
 if (require.main === module && !process.env.KF_SKIP_MAKE_LIBNODE) main();

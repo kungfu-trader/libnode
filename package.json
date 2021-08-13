@@ -7,7 +7,7 @@
   "version": "14.16.0",
   "description": "Build shared node lib",
   "license": "Apache-2.0",
-  "main": ".gyp/node-lib.js",
+  "main": "src/js/index.js",
   "repository": {
     "url": "https://github.com/kungfu-trader/libnode.git"
   },
@@ -29,7 +29,7 @@
     "make": "node .gyp/node-make.js",
     "package": "node .gyp/node-pre-gyp.js package",
     "rebuild": "node .gyp/node-pre-gyp.js rebuild",
-    "format": "prettier --write --parser typescript .gyp/*.js"
+    "format": "prettier --write --parser typescript .gyp/*.js src/js/*.js"
   },
   "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.5",

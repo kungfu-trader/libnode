@@ -3,7 +3,7 @@ const glob = require('glob');
 const path = require('path');
 const sywac = require('sywac');
 
-const dist = (productDir) => {
+const dist = (buildType) => {
   const nodeDistDir = path.join('dist', 'node');
   const copyFiles = (pattern) => {
     glob.sync(pattern).forEach((p) => {
@@ -13,12 +13,12 @@ const dist = (productDir) => {
     });
   };
   fse.ensureDirSync(nodeDistDir);
-  copyFiles(path.join('node', 'out', productDir, 'libnode*'));
-  copyFiles(path.join('build', productDir, '*.*'));
+  copyFiles(path.join('node', 'out', buildType, 'libnode*'));
+  copyFiles(path.join('build', buildType, '*.*'));
 };
 
 const cli = sywac
-  .path('--product-dir', { defaultValue: 'Release' })
+  .path('--build-type', { defaultValue: 'Release' })
   .help('--help')
   .version('--version')
   .outputSettings({ maxWidth: 75 });
@@ -27,7 +27,7 @@ module.exports = cli;
 
 async function main() {
   const argv = await cli.parseAndExit();
-  dist(argv['product-dir']);
+  dist(argv['build-type']);
 }
 
 if (require.main === module) main();
