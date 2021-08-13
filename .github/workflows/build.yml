@@ -29,8 +29,8 @@ jobs:
 
       - name: Switch Node Version
         run: |
-          git fetch
-          git switch ${{ github.event.inputs.node-version }}
+          git fetch --depth=1 origin ${{ github.event.inputs.node-version }}
+          git checkout FETCH_HEAD
         working-directory: node
 
       - name: Setup Node.js environment
