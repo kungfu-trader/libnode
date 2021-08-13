@@ -5,16 +5,24 @@ const sywac = require('sywac');
 
 const dist = (buildType) => {
   const nodeDistDir = path.join('dist', 'node');
-  const copyFiles = (pattern) => {
-    glob.sync(pattern).forEach((p) => {
-      if (fse.lstatSync(p).isFile()) {
-        fse.copySync(p, path.join(nodeDistDir, path.basename(p)));
-      }
-    });
+  const exts = ['.json', '.dylib', '.so', '.dll', '.lib'];
+
+  const include = (p) => fse.lstatSync(p).isFile() && exts.includes(path.extname(p));
+  const copy = (p) => fse.copySync(p, path.join(nodeDistDir, path.basename(p)));
+  const copyFiles = (pattern) => glob.sync(pattern).filter(include).forEach(copy);
+  const makeSymbolLink = (pattern, ext) => {
+    const link = (p) => fse.symlinkSync(path.basename(p), path.join(nodeDistDir, `libnode.${ext}`));
+    glob.sync(path.join(nodeDistDir, pattern)).sort().reverse().slice(0, 1).forEach(link);
   };
+
   fse.ensureDirSync(nodeDistDir);
-  copyFiles(path.join('node', 'out', buildType, 'libnode*'));
+  fse.emptyDirSync(nodeDistDir);
+
   copyFiles(path.join('build', buildType, '*.*'));
+  copyFiles(path.join('node', 'out', buildType, 'libnode*'));
+
+  makeSymbolLink('libnode.*.dylib', 'dylib');
+  makeSymbolLink('libnode.so.*', 'so');
 };
 
 const cli = sywac
