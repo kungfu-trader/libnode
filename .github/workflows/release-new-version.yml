@@ -3,7 +3,7 @@ on:
   pull_request:
     types: [closed]
     branches:
-      - v*.x
+      - release/v*.x
 
 jobs:
   release:
