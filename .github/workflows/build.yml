@@ -5,7 +5,7 @@ on:
       node-version:
         description: 'Type node version to build'
         required: true
-        default: '14.16.0'
+        default: 'v14.16.0'
 
 jobs:
   build:
