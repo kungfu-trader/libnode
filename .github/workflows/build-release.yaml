@@ -93,12 +93,20 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_US_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Publish Prebuilt to AWS (US)
+      - name: Stage Prebuilt to AWS (US)
         uses: kungfu-trader/action-publish-prebuilt@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts-path: "github-artifacts"
-          bucket-staging: "kungfu-prebuilt"
+          bucket-staging: "kungfu-prebuilt-staging"
+          no-comment: "true"
+
+      - name: Publish Prebuilt to AWS (US)
+        uses: kungfu-trader/action-publish-prebuilt@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          bucket-staging: 'kungfu-prebuilt-staging'
+          bucket-release: 'kungfu-prebuilt'
           no-comment: "true"
 
       - name: Configure AWS Crendentials (CN)
@@ -108,10 +116,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_CN_SECRET_ACCESS_KEY }}
           aws-region: cn-northwest-1
 
-      - name: Publish Prebuilt to AWS (CN)
+      - name: Stage Prebuilt to AWS (CN)
         uses: kungfu-trader/action-publish-prebuilt@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts-path: "github-artifacts"
-          bucket-staging: "kungfu-prebuilt"
+          bucket-staging: "kungfu-prebuilt-staging"
+          no-comment: "true"
+
+      - name: Publish Prebuilt to AWS (CN)
+        uses: kungfu-trader/action-publish-prebuilt@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          bucket-staging: 'kungfu-prebuilt-staging'
+          bucket-release: 'kungfu-prebuilt'
           no-comment: "true"
