@@ -28,7 +28,9 @@ jobs:
           submodules: recursive
 
       - name: Switch Node Version
-        run: git switch ${{ github.event.inputs.node-version }}
+        run: |
+          git fetch
+          git switch ${{ github.event.inputs.node-version }}
         working-directory: node
 
       - name: Setup Node.js environment
