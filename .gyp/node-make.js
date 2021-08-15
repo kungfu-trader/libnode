@@ -79,15 +79,21 @@ const stamp = (buildType) => {
     .filter((e) => e && e.length > 0)
     .toString()
     .trim();
-  buildInfo = {
-    build: {
-      timestamp: new Date(),
-    },
+  const packageJson = JSON.parse(fs.readFileSync('package.json'));
+  const userInfo = os.userInfo();
+  const buildInfo = {
+    version: packageJson.version,
     git: {
       revision: gitHead,
     },
+    build: {
+      user: userInfo.username,
+      osVersion: os.version(),
+      timestamp: new Date(),
+    },
   };
-  fs.writeFileSync(path.join('out', buildType, 'libnode.json'), JSON.stringify(buildInfo, null, 2));
+  const buildInfoFile = path.join('build', buildType, 'libnodebuildinfo.json');
+  fs.writeFileSync(buildInfoFile, JSON.stringify(buildInfo, null, 2));
 };
 
 const cli = sywac
@@ -101,7 +107,7 @@ module.exports = cli;
 async function main() {
   const argv = await cli.parseAndExit();
   build();
-  stamp(path.join('build', argv['build-type']));
+  stamp(argv['build-type']);
 }
 
 if (require.main === module && !process.env.KF_SKIP_MAKE_LIBNODE) main();

@@ -89,7 +89,7 @@
             "<@(gyp_inputs)",
           ],
           "outputs": [
-            "<(module_root_dir)/dist/node/libnode.json",
+            "<(module_root_dir)/dist/node/libnodebuildinfo.json",
           ],
           "action": [
             "python",
