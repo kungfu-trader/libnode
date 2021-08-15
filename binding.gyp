@@ -50,7 +50,7 @@
             "<@(libnode_inputs)",
           ],
           "outputs": [
-            "<(PRODUCT_DIR)/libnode.json",
+            "<(PRODUCT_DIR)/libnodebuildinfo.json",
           ],
           "action": [
             "python",
