@@ -1,6 +1,7 @@
 const path = require('path');
 
-const distDir = path.join(__dirname, 'dist', 'node');
+const rootDir = path.dirname(path.dirname(__dirname));
+const distDir = path.join(rootDir, 'dist', 'node');
 
 exports.include = path.resolve(path.join(distDir, 'include'));
 exports.libpath = path.resolve(distDir);
