@@ -73,7 +73,7 @@ const buildUnix = () => {
 
 const build = process.platform === 'win32' ? buildWin : buildUnix;
 
-const stamp = (baseDir) => {
+const stamp = (buildType) => {
   const result = run('git', ['rev-parse', 'HEAD'], { cwd: nodeSrcDir, stdio: 'pipe' });
   const gitHead = result.output
     .filter((e) => e && e.length > 0)
@@ -87,7 +87,7 @@ const stamp = (baseDir) => {
       revision: gitHead,
     },
   };
-  fs.writeFileSync(path.join(baseDir, 'libnode.json'), JSON.stringify(buildInfo, null, 2));
+  fs.writeFileSync(path.join('out', buildType, 'libnode.json'), JSON.stringify(buildInfo, null, 2));
 };
 
 const cli = sywac
