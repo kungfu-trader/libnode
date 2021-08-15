@@ -29,7 +29,7 @@
     "make": "node .gyp/node-make.js",
     "package": "node .gyp/node-pre-gyp.js package",
     "rebuild": "node .gyp/node-pre-gyp.js rebuild",
-    "format": "prettier --write --parser typescript .gyp/*.js *.js"
+    "format": "prettier --write --parser typescript .gyp/*.js src/js/*.js"
   },
   "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.5",
