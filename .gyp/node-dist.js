@@ -7,9 +7,10 @@ const dist = (buildType) => {
   const nodeDistDir = path.join('dist', 'node');
   const exts = ['.json', '.node', '.dylib', '.so', '.dll', '.lib'];
 
-  const include = (p) => fse.lstatSync(p).isFile() && exts.includes(path.extname(p));
+  const like = (p) => path.basename(p).startsWith('libnode') || exts.includes(path.extname(p));
+  const match = (p) => fse.lstatSync(p).isFile() && like(p);
   const copy = (p) => fse.copySync(p, path.join(nodeDistDir, path.basename(p)));
-  const copyFiles = (pattern) => glob.sync(pattern).filter(include).forEach(copy);
+  const copyFiles = (pattern) => glob.sync(pattern).filter(match).forEach(copy);
   const copyHeaders = (source) => {
     const target = path.join(nodeDistDir, 'include');
     glob.sync(path.join(source, '**', '*.h')).forEach((p) => {
