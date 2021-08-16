@@ -5,7 +5,7 @@ const sywac = require('sywac');
 
 const dist = (buildType) => {
   const nodeDistDir = path.join('dist', 'node');
-  const exts = ['.json', '.dylib', '.so', '.dll', '.lib'];
+  const exts = ['.json', '.node', '.dylib', '.so', '.dll', '.lib'];
 
   const include = (p) => fse.lstatSync(p).isFile() && exts.includes(path.extname(p));
   const copy = (p) => fse.copySync(p, path.join(nodeDistDir, path.basename(p)));

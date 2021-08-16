@@ -88,7 +88,6 @@ const stamp = (buildType) => {
     },
     build: {
       user: userInfo.username,
-      osVersion: os.version(),
       timestamp: new Date(),
     },
   };
