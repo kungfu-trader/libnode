@@ -50,7 +50,7 @@
             "<@(libnode_inputs)",
           ],
           "outputs": [
-            "<(PRODUCT_DIR)/libnode.json",
+            "<(PRODUCT_DIR)/libnodebuildinfo.json",
           ],
           "action": [
             "python",
@@ -89,7 +89,7 @@
             "<@(gyp_inputs)",
           ],
           "outputs": [
-            "<(module_root_dir)/dist/node/libnode.json",
+            "<(module_root_dir)/dist/node/libnodebuildinfo.json",
           ],
           "action": [
             "python",

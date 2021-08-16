@@ -3,7 +3,7 @@ on:
   pull_request:
     types: [opened, reopened, synchronize]
     branches:
-      - v*.x
+      - release/v*.x
 
 jobs:
   build:
@@ -76,7 +76,6 @@ jobs:
   release:
     needs: [build]
     runs-on: ubuntu-20.04
-    container: "docker.io/kungfutrader/kungfu-builder-centos:v1.0.1"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -99,6 +98,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts-path: "github-artifacts"
           bucket-staging: "kungfu-prebuilt-staging"
+          no-comment: "true"
 
       - name: Configure AWS Crendentials (CN)
         uses: aws-actions/configure-aws-credentials@v1

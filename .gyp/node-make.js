@@ -1,7 +1,5 @@
 const { patchEnv, run } = require('./node-lib.js');
 const fs = require('fs');
-const fse = require('fs-extra');
-const glob = require('glob');
 const path = require('path');
 const os = require('os');
 const sywac = require('sywac');
@@ -75,25 +73,30 @@ const buildUnix = () => {
 
 const build = process.platform === 'win32' ? buildWin : buildUnix;
 
-const stamp = (baseDir) => {
+const stamp = (buildType) => {
   const result = run('git', ['rev-parse', 'HEAD'], { cwd: nodeSrcDir, stdio: 'pipe' });
   const gitHead = result.output
     .filter((e) => e && e.length > 0)
     .toString()
     .trim();
-  buildInfo = {
-    build: {
-      timestamp: new Date(),
-    },
+  const packageJson = JSON.parse(fs.readFileSync('package.json'));
+  const userInfo = os.userInfo();
+  const buildInfo = {
+    version: packageJson.version,
     git: {
       revision: gitHead,
     },
+    build: {
+      user: userInfo.username,
+      timestamp: new Date(),
+    },
   };
-  fs.writeFileSync(path.join(baseDir, 'libnode.json'), JSON.stringify(buildInfo, null, 2));
+  const buildInfoFile = path.join('build', buildType, 'libnodebuildinfo.json');
+  fs.writeFileSync(buildInfoFile, JSON.stringify(buildInfo, null, 2));
 };
 
 const cli = sywac
-  .path('--product-dir', { defaultValue: 'Release' })
+  .path('--build-type', { defaultValue: 'Release' })
   .help('--help')
   .version('--version')
   .outputSettings({ maxWidth: 75 });
@@ -103,7 +106,7 @@ module.exports = cli;
 async function main() {
   const argv = await cli.parseAndExit();
   build();
-  stamp(path.join('build', argv['product-dir']));
+  stamp(argv['build-type']);
 }
 
 if (require.main === module && !process.env.KF_SKIP_MAKE_LIBNODE) main();

@@ -1,8 +1,11 @@
 name: Build
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      node-version:
+        description: 'Type node version to build'
+        required: true
+        default: 'v14.16.0'
 
 jobs:
   build:
@@ -23,6 +26,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
+
+      - name: Switch Node Version
+        run: |
+          git fetch --depth=1 origin ${{ github.event.inputs.node-version }}
+          git checkout FETCH_HEAD
+        working-directory: node
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v2

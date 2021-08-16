@@ -3,22 +3,41 @@ const glob = require('glob');
 const path = require('path');
 const sywac = require('sywac');
 
-const dist = (productDir) => {
+const dist = (buildType) => {
   const nodeDistDir = path.join('dist', 'node');
-  const copyFiles = (pattern) => {
-    glob.sync(pattern).forEach((p) => {
-      if (fse.lstatSync(p).isFile()) {
-        fse.copySync(p, path.join(nodeDistDir, path.basename(p)));
-      }
+  const exts = ['.json', '.node', '.dylib', '.so', '.dll', '.lib'];
+
+  const include = (p) => fse.lstatSync(p).isFile() && exts.includes(path.extname(p));
+  const copy = (p) => fse.copySync(p, path.join(nodeDistDir, path.basename(p)));
+  const copyFiles = (pattern) => glob.sync(pattern).filter(include).forEach(copy);
+  const copyHeaders = (source) => {
+    const target = path.join(nodeDistDir, 'include');
+    glob.sync(path.join(source, '**', '*.h')).forEach((p) => {
+      fse.copySync(p, path.join(target, p.replace(source, '')));
     });
   };
+  const makeSymbolLink = (pattern, ext) => {
+    const target = path.join(nodeDistDir, `libnode.${ext}`);
+    const link = (p) => fse.symlinkSync(path.basename(p), target);
+    glob.sync(path.join(nodeDistDir, pattern)).sort().reverse().slice(0, 1).forEach(link);
+  };
+
   fse.ensureDirSync(nodeDistDir);
-  copyFiles(path.join('node', 'out', productDir, 'libnode*'));
-  copyFiles(path.join('build', productDir, '*.*'));
+  fse.emptyDirSync(nodeDistDir);
+
+  copyFiles(path.join('build', buildType, '*.*'));
+  copyFiles(path.join('node', 'out', buildType, 'libnode*'));
+
+  copyHeaders(path.join('node', 'src'));
+  copyHeaders(path.join('node', 'deps', 'v8', 'include'));
+  copyHeaders(path.join('node', 'deps', 'uv', 'include'));
+
+  makeSymbolLink('libnode.*.dylib', 'dylib');
+  makeSymbolLink('libnode.so.*', 'so');
 };
 
 const cli = sywac
-  .path('--product-dir', { defaultValue: 'Release' })
+  .path('--build-type', { defaultValue: 'Release' })
   .help('--help')
   .version('--version')
   .outputSettings({ maxWidth: 75 });
@@ -27,7 +46,7 @@ module.exports = cli;
 
 async function main() {
   const argv = await cli.parseAndExit();
-  dist(argv['product-dir']);
+  dist(argv['build-type']);
 }
 
 if (require.main === module) main();
