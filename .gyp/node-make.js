@@ -93,7 +93,7 @@ const stamp = (buildType) => {
     },
   };
   const targetDir = path.join('build', buildType);
-  fse.ensureDir(targetDir);
+  fse.ensureDirSync(targetDir);
   const buildInfoFile = path.join(targetDir, 'libnodebuildinfo.json');
   fs.writeFileSync(buildInfoFile, JSON.stringify(buildInfo, null, 2));
 };
