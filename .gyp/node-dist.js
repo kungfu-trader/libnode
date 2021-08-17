@@ -1,3 +1,4 @@
+const { exitOnError } = require('./node-lib.js');
 const fse = require('fs-extra');
 const glob = require('glob');
 const path = require('path');
@@ -50,4 +51,4 @@ async function main() {
   dist(argv['build-type']);
 }
 
-if (require.main === module) main();
+if (require.main === module) main().catch(exitOnError);

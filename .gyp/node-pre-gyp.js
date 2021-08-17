@@ -1,4 +1,4 @@
-const { run } = require('./node-lib.js');
+const { exitOnError, run } = require('./node-lib.js');
 
 function node_pre_gyp(cmd, check = true) {
   const buildType = process.env.npm_package_config_build_type;
@@ -35,4 +35,4 @@ async function main() {
   await cli.parseAndExit();
 }
 
-if (require.main === module) main();
+if (require.main === module) main().catch(exitOnError);
