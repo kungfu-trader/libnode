@@ -1,5 +1,6 @@
-const { patchEnv, run } = require('./node-lib.js');
+const { exitOnError, patchEnv, run } = require('./node-lib.js');
 const fs = require('fs');
+const fse = require('fs-extra');
 const path = require('path');
 const os = require('os');
 const sywac = require('sywac');
@@ -91,7 +92,9 @@ const stamp = (buildType) => {
       timestamp: new Date(),
     },
   };
-  const buildInfoFile = path.join('build', buildType, 'libnodebuildinfo.json');
+  const targetDir = path.join('build', buildType);
+  fse.ensureDirSync(targetDir);
+  const buildInfoFile = path.join(targetDir, 'libnodebuildinfo.json');
   fs.writeFileSync(buildInfoFile, JSON.stringify(buildInfo, null, 2));
 };
 
@@ -109,4 +112,4 @@ async function main() {
   stamp(argv['build-type']);
 }
 
-if (require.main === module && !process.env.KF_SKIP_MAKE_LIBNODE) main();
+if (require.main === module && !process.env.KF_SKIP_MAKE_LIBNODE) main().catch(exitOnError);

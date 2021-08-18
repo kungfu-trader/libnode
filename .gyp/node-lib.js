@@ -2,6 +2,11 @@ const { spawnSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
+exports.exitOnError = function (error) {
+  console.error(error);
+  process.exit(-1);
+};
+
 exports.patchEnv = function () {
   Object.keys(process.env).forEach((key) => {
     if (key.startsWith('NPM_') || key.startsWith('npm_')) {

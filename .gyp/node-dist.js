@@ -1,3 +1,4 @@
+const { exitOnError } = require('./node-lib.js');
 const fse = require('fs-extra');
 const glob = require('glob');
 const path = require('path');
@@ -7,9 +8,10 @@ const dist = (buildType) => {
   const nodeDistDir = path.join('dist', 'node');
   const exts = ['.json', '.node', '.dylib', '.so', '.dll', '.lib'];
 
-  const include = (p) => fse.lstatSync(p).isFile() && exts.includes(path.extname(p));
+  const include = (p) => path.basename(p).includes('.so.') || exts.includes(path.extname(p));
+  const match = (p) => fse.lstatSync(p).isFile() && include(p);
   const copy = (p) => fse.copySync(p, path.join(nodeDistDir, path.basename(p)));
-  const copyFiles = (pattern) => glob.sync(pattern).filter(include).forEach(copy);
+  const copyFiles = (pattern) => glob.sync(pattern).filter(match).forEach(copy);
   const copyHeaders = (source) => {
     const target = path.join(nodeDistDir, 'include');
     glob.sync(path.join(source, '**', '*.h')).forEach((p) => {
@@ -49,4 +51,4 @@ async function main() {
   dist(argv['build-type']);
 }
 
-if (require.main === module) main();
+if (require.main === module) main().catch(exitOnError);
