@@ -8,8 +8,8 @@ const dist = (buildType) => {
   const nodeDistDir = path.join('dist', 'node');
   const exts = ['.json', '.node', '.dylib', '.so', '.dll', '.lib'];
 
-  const like = (p) => path.basename(p).startsWith('libnode') || exts.includes(path.extname(p));
-  const match = (p) => fse.lstatSync(p).isFile() && like(p);
+  const include = (p) => path.basename(p).includes('.so.') || exts.includes(path.extname(p));
+  const match = (p) => fse.lstatSync(p).isFile() && include(p);
   const copy = (p) => fse.copySync(p, path.join(nodeDistDir, path.basename(p)));
   const copyFiles = (pattern) => glob.sync(pattern).filter(match).forEach(copy);
   const copyHeaders = (source) => {
