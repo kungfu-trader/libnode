@@ -27,7 +27,7 @@ const dist = (buildType) => {
   const fixLibName = (suffix) => {
     if (process.platform === 'win32') {
       glob.sync(path.join(nodeDistDir, `libnode.${suffix}`)).forEach((p) => {
-        fse.renameSync(p, p.replace('libnode', 'node'));
+        fse.renameSync(p, p.replace(`libnode.${suffix}`, `node.${suffix}`));
       });
     }
   }
