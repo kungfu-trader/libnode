@@ -24,6 +24,13 @@ const dist = (buildType) => {
     const link = (p) => fse.symlinkSync(path.basename(p), target);
     glob.sync(path.join(nodeDistDir, pattern)).sort().reverse().slice(0, 1).forEach(link);
   };
+  const fixLibName = (suffix) => {
+    if (process.platform === 'win32') {
+      glob.sync(path.join(nodeDistDir, `libnode.${suffix}`)).forEach((p) => {
+        fse.renameSync(p, p.replace('libnode', 'node'));
+      });
+    }
+  }
 
   fse.ensureDirSync(nodeDistDir);
   fse.emptyDirSync(nodeDistDir);
@@ -37,6 +44,9 @@ const dist = (buildType) => {
 
   makeSymbolLink('libnode.*.dylib', 'dylib');
   makeSymbolLink('libnode.so.*', 'so');
+
+  fixLibName('dll');
+  fixLibName('lib');
 };
 
 const cli = sywac
