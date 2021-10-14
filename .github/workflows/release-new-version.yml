@@ -17,8 +17,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "14"
-          registry-url: "https://npm.pkg.github.com"
-          scope: "@kungfu-trader"
 
       - name: Configure AWS Crendentials (US)
         uses: aws-actions/configure-aws-credentials@v1
@@ -48,6 +46,18 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           bucket-staging: 'kungfu-prebuilt-staging'
           bucket-release: 'kungfu-prebuilt'
+
+      - name: Publish to NPM Packages
+        run: npm publish --access=public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Setup Node.js environment for GitHub
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@kungfu-trader"
 
       - name: Publish to GitHub Packages
         run: npm publish
