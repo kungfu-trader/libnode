@@ -11,9 +11,6 @@
   "repository": {
     "url": "https://github.com/kungfu-trader/libnode.git"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
   "binary": {
     "module_name": "link_node",
     "module_path": "dist/node",
