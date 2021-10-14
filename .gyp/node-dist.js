@@ -5,7 +5,7 @@ const glob = require('glob');
 const path = require('path');
 const sywac = require('sywac');
 
-const dist = async (buildType) => {
+const dist = (buildType) => {
   const nodeDistDir = path.join('dist', 'node');
   const exts = ['.json', '.node', '.dylib', '.so', '.dll', '.lib'];
 
@@ -50,7 +50,7 @@ module.exports = cli;
 
 async function main() {
   const argv = await cli.parseAndExit();
-  await dist(argv['build-type']);
+  dist(argv['build-type']);
 }
 
 if (require.main === module) main().catch(exitOnError);
