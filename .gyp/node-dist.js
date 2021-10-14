@@ -1,5 +1,4 @@
 const { exitOnError } = require('./node-lib.js');
-const { spawn } = require('child_process');
 const fse = require('fs-extra');
 const glob = require('glob');
 const path = require('path');
