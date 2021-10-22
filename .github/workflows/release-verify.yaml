@@ -53,8 +53,14 @@ jobs:
         env:
           KF_SKIP_FALLBACK_BUILD: true
 
-      - name: Make libnode
+      - name: Make libnode (Windows)
+        if: ${{ matrix.name == 'Windows' }}
         # Workaround for gyp not able to find nasm.exe when run on GitHub Windows runner
+        run: yarn make
+
+      - name: Make libnode (CentOS)
+        if: ${{ matrix.name == 'Linux' }}
+        uses: 'docker://kungfutrader/kungfu-builder-centos:v1.1.0'
         run: yarn make
 
       - name: Build and Package
