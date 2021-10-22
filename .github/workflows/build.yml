@@ -24,7 +24,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       USE_HARD_LINKS: false
-      SHELL: ${{ matrix.shell }}
+      BUILDER_OS: ${{ matrix.name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
