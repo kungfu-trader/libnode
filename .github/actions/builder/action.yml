@@ -13,30 +13,22 @@ runs:
       with:
         python-version: "3.9"
 
-    - name: Setup Windows environment
-      if: env.BUILDER_OS == 'Windows'
-      uses: crazy-max/ghaction-chocolatey@v1
-      with:
-        args: install -y nasm --no-progress
-
-    - name: Setup Windows PATH for nasm
-      if: env.BUILDER_OS == 'Windows'
-      run: |
-        Get-ChildItem -Path "${env:ProgramFiles}" | Where-Object {($_.Name -Like 'NASM*')} | % { $_.FullName } | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
-
     - name: Setup Yarn environment
       run: yarn install
+      shell: ${{ env.SHELL }}
       env:
         KF_SKIP_FALLBACK_BUILD: true
 
     - name: Make libnode
       # Workaround for gyp not able to find nasm.exe when run on GitHub Windows runner
       run: yarn make
+      shell: ${{ env.SHELL }}
 
     - name: Build and Package
       run: |
         yarn build
         yarn package
+      shell: ${{ env.SHELL }}
       env:
         KF_SKIP_MAKE_LIBNODE: true
 

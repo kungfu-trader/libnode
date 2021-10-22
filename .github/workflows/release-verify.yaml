@@ -12,19 +12,34 @@ jobs:
         include:
           - os: ubuntu-20.04
             name: "Linux"
+            shell: "bash"
           - os: macos-11
             name: "MacOS"
+            shell: "bash"
           - os: windows-2019
             name: "Windows"
+            shell: "powershell"
     runs-on: ${{ matrix.os }}
     env:
       USE_HARD_LINKS: false
-      BUILDER_OS: ${{ matrix.name }}
+      SHELL: ${{ matrix.shell }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
         with:
           submodules: recursive
+
+      - name: Setup Windows environment
+        if: matrix.name == 'Windows'
+        uses: crazy-max/ghaction-chocolatey@v1
+        with:
+          args: install -y nasm --no-progress
+
+      - name: Setup Windows PATH for nasm
+        if: matrix.name == 'Windows'
+        run: |
+          Get-ChildItem -Path "${env:ProgramFiles}" | Where-Object {($_.Name -Like 'NASM*')} | % { $_.FullName } | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
+      
       - name: Build
         uses: ./.github/actions/builder
 
