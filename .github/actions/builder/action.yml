@@ -15,20 +15,20 @@ runs:
 
     - name: Setup Yarn environment
       run: yarn install
-      shell: ${{ env.SHELL }}
+      shell: bash
       env:
         KF_SKIP_FALLBACK_BUILD: true
 
     - name: Make libnode
       # Workaround for gyp not able to find nasm.exe when run on GitHub Windows runner
       run: yarn make
-      shell: ${{ env.SHELL }}
+      shell: bash
 
     - name: Build and Package
       run: |
         yarn build
         yarn package
-      shell: ${{ env.SHELL }}
+      shell: bash
       env:
         KF_SKIP_MAKE_LIBNODE: true
 
