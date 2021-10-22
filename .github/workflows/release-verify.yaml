@@ -21,6 +21,10 @@ jobs:
       USE_HARD_LINKS: false
       BUILDER_OS: ${{ matrix.name }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
       - name: Build
         uses: ./.github/actions/builder
 
