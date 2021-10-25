@@ -28,6 +28,12 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Setup Python environment
+        if: matrix.name != 'Linux'
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
       - name: Setup Windows environment
         if: matrix.name == 'Windows'
         uses: crazy-max/ghaction-chocolatey@v1

@@ -8,11 +8,6 @@ runs:
         registry-url: "https://npm.pkg.github.com"
         scope: "@kungfu-trader"
 
-    - name: Setup Python environment
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.9"
-
     - name: Setup Yarn environment
       run: yarn install
       shell: bash
