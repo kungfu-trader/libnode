@@ -12,66 +12,41 @@ jobs:
         include:
           - os: ubuntu-20.04
             name: "Linux"
+            container: "docker.io/kungfutrader/kungfu-builder-centos:v1.1.1"
           - os: macos-11
             name: "MacOS"
           - os: windows-2019
             name: "Windows"
     runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
     env:
       USE_HARD_LINKS: false
+      BUILDER_OS: ${{ matrix.name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
         with:
           submodules: recursive
 
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v2
-        with:
-          node-version: "14"
-          registry-url: "https://npm.pkg.github.com"
-          scope: "@kungfu-trader"
-
       - name: Setup Python environment
+        if: matrix.name != 'Linux'
         uses: actions/setup-python@v2
         with:
           python-version: "3.9"
 
       - name: Setup Windows environment
-        if: ${{ matrix.name == 'Windows' }}
+        if: matrix.name == 'Windows'
         uses: crazy-max/ghaction-chocolatey@v1
         with:
           args: install -y nasm --no-progress
 
       - name: Setup Windows PATH for nasm
-        if: ${{ matrix.name == 'Windows' }}
+        if: matrix.name == 'Windows'
         run: |
           Get-ChildItem -Path "${env:ProgramFiles}" | Where-Object {($_.Name -Like 'NASM*')} | % { $_.FullName } | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
- 
-      - name: Setup Yarn environment
-        run: yarn install
-        env:
-          KF_SKIP_FALLBACK_BUILD: true
-
-      - name: Make libnode
-        # Workaround for gyp not able to find nasm.exe when run on GitHub Windows runner
-        run: yarn make
-
-      - name: Build and Package
-        run: |
-          yarn build
-          yarn package
-        env:
-          KF_SKIP_MAKE_LIBNODE: true
-
-      - name: Upload
-        uses: actions/upload-artifact@v2
-        with:
-          # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#github-context
-          name: "libnode-${{matrix.name}}-${{github.actor}}-${{github.sha}}"
-          path: |
-            **/build/stage/*/v*/v*/*.*
-          if-no-files-found: ignore
+      
+      - name: Build
+        uses: ./.github/actions/builder
 
   release:
     needs: [build]
