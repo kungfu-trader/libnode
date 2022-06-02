@@ -15,7 +15,7 @@ jobs:
             container: "docker.io/kungfutrader/kungfu-builder-centos:v1.1.2"
           - os: macos-11
             name: "MacOS"
-          - os: windows-2022
+          - os: windows-2019
             name: "Windows"
     runs-on: ${{ matrix.os }}
     container: ${{ matrix.container }}
