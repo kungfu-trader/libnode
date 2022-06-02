@@ -19,13 +19,14 @@ runs:
       run: yarn make
       shell: bash
 
-    - name: Build and Package
-      run: |
-        yarn build
-        yarn package
+    - name: Build
+      run: yarn build
       shell: bash
       env:
         KF_SKIP_MAKE_LIBNODE: true
+
+    - name: Package
+      run: yarn package
 
     - name: Upload
       uses: actions/upload-artifact@v2
@@ -34,4 +35,3 @@ runs:
         name: "libnode-${{env.BUILDER_OS}}-${{github.actor}}-${{github.sha}}"
         path: |
           **/build/stage/*/v*/v*/*.*
-        if-no-files-found: ignore
