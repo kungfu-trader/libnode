@@ -31,15 +31,15 @@
     "format": "prettier --write --parser typescript .gyp/*.js src/js/*.js"
   },
   "dependencies": {
+    "@mapbox/node-pre-gyp": "^1.0.5",
     "sywac": "^1.3.0"
   },
   "devDependencies": {
-    "@mapbox/node-pre-gyp": "^1.0.5",
     "fs-extra": "^10.0.0",
-    "glob": "^7.1.6",
-    "node-addon-api": "^4.0.0",
-    "node-gyp": "^8.1.0",
-    "prettier": "^2.3.0",
+    "glob": "^7.2.0",
+    "node-addon-api": "^5.0.0",
+    "node-gyp": "^9.0.0",
+    "prettier": "^2.6.0",
     "xml-js": "^1.6.11",
     "yarn": "^1.22.0"
   }
