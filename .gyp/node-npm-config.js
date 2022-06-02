@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const fs = require('fs-extra');
+const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const { exitOnError } = require('./node-lib.js');
@@ -12,7 +12,7 @@ const PrebuiltHost_US = 'https://prebuilt.libkungfu.io';
 const spawnOptsPipe = { shell: true, stdio: 'pipe', windowsHide: true };
 const spawnOptsInherit = { shell: true, stdio: 'inherit', windowsHide: true };
 
-const packageJson = fs.readJsonSync(path.resolve(path.dirname(__dirname), 'package.json'));
+const packageJson = JSON.parse(fs.readFileSync(path.resolve(path.dirname(__dirname), 'package.json')));
 
 const scope = (npmConfigValue) => (npmConfigValue === 'undefined' ? '[package.json]' : '[user]');
 
