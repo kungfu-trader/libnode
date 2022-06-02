@@ -9,23 +9,24 @@ runs:
         scope: "@kungfu-trader"
 
     - name: Setup Yarn environment
-      run: yarn install
-      shell: bash
       env:
         KF_SKIP_FALLBACK_BUILD: true
+      shell: bash
+      run: yarn install
 
     - name: Make libnode
+      shell: bash
       # Workaround for gyp not able to find nasm.exe when run on GitHub Windows runner
       run: yarn make
-      shell: bash
 
     - name: Build
-      run: yarn build
-      shell: bash
       env:
         KF_SKIP_MAKE_LIBNODE: true
+      shell: bash
+      run: yarn build
 
     - name: Package
+      shell: bash
       run: yarn package
 
     - name: Upload
