@@ -3,7 +3,6 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const { exitOnError } = require('./node-lib.js');
 
 const PrebuiltHostConfig = 'binary_host_mirror';
 const PrebuiltHost_CN = 'https://prebuilt.libkungfu.cc';
@@ -40,25 +39,22 @@ function showAllConfig() {
   console.log(`[binary] ${npmConfigKey} = ${value} ${scope(hostConfigValue)}`);
 }
 
-const cli = require('sywac')
-  .command('show', { run: showAllConfig })
-  .command('auto', {
-    run: () => {
-      const githubActions = process.env.CI && process.env.GITHUB_ACTIONS;
-      const prebuiltHost = githubActions ? PrebuiltHost_US : PrebuiltHost_CN;
-      const setConfig = (key, value) => githubActions && npmCall(['config', 'set', key, value]);
-      setConfig(`link_node_${PrebuiltHostConfig}`, prebuiltHost);
-      showAllConfig();
-    },
-  })
-  .help('--help')
-  .version('--version')
-  .showHelpByDefault();
-
-module.exports = cli;
-
 async function main() {
-  await cli.parseAndExit();
+  await require('sywac')
+    .command('show', { run: showAllConfig })
+    .command('auto', {
+      run: () => {
+        const githubActions = process.env.CI && process.env.GITHUB_ACTIONS;
+        const prebuiltHost = githubActions ? PrebuiltHost_US : PrebuiltHost_CN;
+        const setConfig = (key, value) => githubActions && npmCall(['config', 'set', key, value]);
+        setConfig(`link_node_${PrebuiltHostConfig}`, prebuiltHost);
+        showAllConfig();
+      },
+    })
+    .help('--help')
+    .version('--version')
+    .showHelpByDefault()
+    .parseAndExit();
 }
 
-if (require.main === module) main().catch(exitOnError);
+if (require.main === module) main().catch(console.error);
