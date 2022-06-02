@@ -19,7 +19,9 @@
     "host": "https://prebuilt.libkungfu.cc"
   },
   "scripts": {
+    "preinstall": "node .gyp/node-npm-config.js auto",
     "install": "node .gyp/node-pre-gyp.js install",
+    "prebuild": "node .gyp/node-npm-config.js show",
     "build": "node .gyp/node-pre-gyp.js build",
     "clean": "node .gyp/node-pre-gyp.js clean",
     "dist": "node .gyp/node-dist.js",
