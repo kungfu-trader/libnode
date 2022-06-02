@@ -19,9 +19,9 @@
     "host": "https://prebuilt.libkungfu.cc"
   },
   "scripts": {
-    "preinstall": "node .gyp/node-npm-config.js auto",
+    "preinstall": "node .gyp/node-npm-config.js",
     "install": "node .gyp/node-pre-gyp.js install",
-    "prebuild": "node .gyp/node-npm-config.js show",
+    "prebuild": "node .gyp/node-npm-config.js",
     "build": "node .gyp/node-pre-gyp.js build",
     "clean": "node .gyp/node-pre-gyp.js clean",
     "dist": "node .gyp/node-dist.js",
@@ -30,6 +30,9 @@
     "rebuild": "node .gyp/node-pre-gyp.js rebuild",
     "format": "prettier --write --parser typescript .gyp/*.js src/js/*.js"
   },
+  "dependencies": {
+    "sywac": "^1.3.0"
+  },
   "devDependencies": {
     "@mapbox/node-pre-gyp": "^1.0.5",
     "fs-extra": "^10.0.0",
@@ -37,7 +40,6 @@
     "node-addon-api": "^4.0.0",
     "node-gyp": "^8.1.0",
     "prettier": "^2.3.0",
-    "sywac": "^1.3.0",
     "xml-js": "^1.6.11",
     "yarn": "^1.22.0"
   }
