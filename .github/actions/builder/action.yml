@@ -4,28 +4,30 @@ runs:
     - name: Setup Node.js environment
       uses: actions/setup-node@v2
       with:
-        node-version: "16"
+        node-version: "14"
         registry-url: "https://npm.pkg.github.com"
         scope: "@kungfu-trader"
 
     - name: Setup Yarn environment
-      run: yarn install
-      shell: bash
       env:
         KF_SKIP_FALLBACK_BUILD: true
+      shell: bash
+      run: yarn --network-timeout=5000000 install --frozen-lockfile
 
     - name: Make libnode
+      shell: bash
       # Workaround for gyp not able to find nasm.exe when run on GitHub Windows runner
       run: yarn make
-      shell: bash
 
-    - name: Build and Package
-      run: |
-        yarn build
-        yarn package
-      shell: bash
+    - name: Build
       env:
         KF_SKIP_MAKE_LIBNODE: true
+      shell: bash
+      run: yarn build
+
+    - name: Package
+      shell: bash
+      run: yarn package
 
     - name: Upload
       uses: actions/upload-artifact@v2
@@ -34,4 +36,3 @@ runs:
         name: "libnode-${{env.BUILDER_OS}}-${{github.actor}}-${{github.sha}}"
         path: |
           **/build/stage/*/v*/v*/*.*
-        if-no-files-found: ignore
