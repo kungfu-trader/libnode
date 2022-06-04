@@ -4,7 +4,7 @@
     "name": "kungfu-trader",
     "email": "info@kungfu.link"
   },
-  "version": "16.5.0",
+  "version": "16.10.0",
   "description": "Build shared node lib",
   "license": "Apache-2.0",
   "main": "src/js/index.js",
@@ -19,7 +19,9 @@
     "host": "https://prebuilt.libkungfu.cc"
   },
   "scripts": {
+    "preinstall": "node .gyp/node-npm-config.js",
     "install": "node .gyp/node-pre-gyp.js install",
+    "prebuild": "node .gyp/node-npm-config.js",
     "build": "node .gyp/node-pre-gyp.js build",
     "clean": "node .gyp/node-pre-gyp.js clean",
     "dist": "node .gyp/node-dist.js",
@@ -30,15 +32,15 @@
   },
   "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.5",
-    "fs-extra": "^9.1.0",
-    "glob": "^7.1.6",
-    "node-addon-api": "^4.0.0",
-    "node-gyp": "^8.1.0",
-    "sywac": "^1.3.0",
-    "yarn": "^1.22.0",
-    "xml-js": "^1.6.11"
+    "sywac": "^1.3.0"
   },
   "devDependencies": {
-    "prettier": "^2.3.0"
+    "fs-extra": "^10.0.0",
+    "glob": "^7.2.0",
+    "node-addon-api": "^5.0.0",
+    "node-gyp": "^9.0.0",
+    "prettier": "^2.6.0",
+    "xml-js": "^1.6.11",
+    "yarn": "^1.22.0"
   }
 }
